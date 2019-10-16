@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    
+  </head>
+  <body>
+    <div style="width: 400px; height: 400px;">
+      <canvas id="myChart"></canvas>
+    </div>
+  </body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+<script>
+    $(function () {
+
+    var socket = io();
+    var canvas = document.getElementById('myChart');
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var myChart = new Chart(ctx, { type: 'pie', data: [] });
+
+    socket.on('client get', function(msg){
+      console.log(msg);
+      let labels = [];
+      let data = [];
+
+      msg.forEach(element => {
+        labels.push(element.name);
+        data.push(element.votes);
+      });
+      refreshChart(labels, data, ctx);
+    });
+
+
+    });
+
+    function refreshChart(labelArr, dataArr, ctx) {
+      console.log(myChart);
+      myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+              labels: labelArr,
+              datasets: [{
+                  label: '# of Votes',
+                  data: dataArr,
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          }
+        });
+        myChart.update();
+    }
+    
+
+</script>
+
+
+<script>
+    
+    
+    </script>
+
+
+
+
+</html>
